@@ -1,18 +1,21 @@
-name: main
+name: Python package
 
 on: workflow_dispatch
 
 jobs:
-  hello-world:
-    name: Hello world
-    runs-on: ubuntu-latest
-    steps:
-    - name: Check-out devops repository
-      uses: actions/checkout@v2
-    - name: Setup PYthon
-      uses: actions/setup_python@2.0.0
-      with: 
-        python_version: '3.7'
+  build:
 
-    - name: Hello World
-      run: python hi.py
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Test with pytest
+        run: python hi.py
